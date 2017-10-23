@@ -8,19 +8,9 @@ class Board extends React.Component {
         
         let store = this.props.simonGameStore;
 
-        let displayNewSequence = () => {
+        let finishInput = () => {
             store.updateSequence();
-            store.currentSequence.forEach( (color, i) => {
-                let timoutTime = (i+1) * 1000;
-                setTimeout( () => {
-                    store.buttonLit = color;
-                    if (i === store.currentSequence.length - 1) {
-                        setTimeout( () => {
-                            store.toggleTurn();
-                        });
-                    }
-                }, timoutTime);
-            });
+            store.displaySequence();
         }
 
         return (
@@ -28,7 +18,11 @@ class Board extends React.Component {
                 {store.colors.map( (color, i) =>
                     <SimonButton key={i} color={color} />
                 )}
-                <button onClick={displayNewSequence}>{store.gameRunning ? "Finish Turn" : "Start Game"}</button>
+                <button 
+                    onClick={store.checkGameRunning ? finishInput : store.startGame}
+                    disabled={store.outputMode}>
+                    {store.gameRunning ? "Finish Turn" : "Start Game"}
+                </button>
             </div>
         )
     }

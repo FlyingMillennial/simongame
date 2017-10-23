@@ -27,29 +27,20 @@ export default function SimonGameStore() {
         this.currentSequence.push(newColor);
         this.enteredSequence.length = 0;
         this.currentPosition = 0;
-        this.toggleTurn();
     });
 
     /* 
     @function inputColor
-    @description adds a color to the enteredSequence.
+    @description adds a color to the enteredSequence, and checks to see if it 
+    matches currentSequence, ending the game if not.
     @param:color what color to add.
     */
     this.inputColor = action('inputColor', (color) => {
         this.enteredSequence.push(color);
-        
         if ( !this.compareSequences(this.currentPosition) ) {
-            this.lastInputCorrect = false;
-            this.currentSequence.length = 0;
-            this.inputMode = false;
-            this.outputMode = false;
-            this.gameRunning = false;
-        } else {
-            this.lastInputCorrect = true;
+            this.stopGame();
         }
-
         this.currentPosition++;
-
     });
 
     /*
@@ -70,6 +61,58 @@ export default function SimonGameStore() {
         this.gameRunning = true;
         this.inputMode = false;
         this.outputMode = true;
+        this.lastInputCorrect = true;
+        this.updateSequence();
+        this.displaySequence()
+    });
+
+    /* 
+    @function displaySequence
+    @description updates buttonLit with each color in the current sequence
+    */
+    this.displaySequence = action( () => {
+        this.currentSequence.forEach( (color, i) => {
+            let timoutTime = (i+1) * 1500;
+            //Light up the button
+            setTimeout( () => {
+                this.buttonLit = color;
+            }, timoutTime);
+            //No light for a moment
+            setTimeout( () => {
+                this.buttonLit = null;
+            }, timoutTime - 500);
+            //Toggle back to input mode one second after the final color is displayed
+            if (i === this.currentSequence.length - 1) {
+                setTimeout( () => {
+                    this.buttonLit = null;
+                    this.toggleTurn();
+                }, timoutTime + 1500);
+            }
+        });
+    });
+
+    /*
+    @function gameRunningCheck
+    @description checks to see if the game is running
+    */
+    this.gameRunningCheck = action('checkGame', () => {
+        if ( (!this.inputMode && !this.ouputMode) || !this.gameRunning ) {
+            return false;
+        } else {
+            return true;
+        }
+    });
+
+    /*
+    @function stopGame
+    @description turns off game booleans and clears sequences
+    */
+    this.stopGame = action('stopGame', () => {
+        this.lastInputCorrect = false;
+        this.currentSequence.length = 0;
+        this.inputMode = false;
+        this.outputMode = false;
+        this.gameRunning = false;
     });
 
     /* 
@@ -81,13 +124,8 @@ export default function SimonGameStore() {
         if (this.outputMode) {
             this.enteredSequence.length = 0;
         }
-        if (!this.inputMode && !this.outputMode) {
-            this.outputMode = true;
-            this.gameRunning = true;
-        } else {
-            this.inputMode = !this.inputMode;
-            this.outputMode = !this.outputMode;
-        }
+        this.inputMode = !this.inputMode;
+        this.outputMode = !this.outputMode;
     });
 
     /* 
