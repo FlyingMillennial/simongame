@@ -22,6 +22,56 @@
   font-size: large;
 }
 
+.buttonContainer {
+  height: 150px;
+  position: relative;
+}
+
+.simonButton {
+  height: 50px;
+  width: 50px;
+  color: white;
+  font-weight: bold;
+  border: none;
+  position: relative;
+}
+
+.simonButton.red[disabled],
+.simonButton.blue[disabled],
+.simonButton.yellow[disabled],
+.simonButton.green[disabled] {
+  background-color: gray;
+  color: black;
+}
+
+.simonButton.red,
+.simonButton.red[disabled].active {
+  background-color: red;
+  top: 0;
+  left: 0;
+}
+
+.simonButton.blue,
+.simonButton.blue[disabled].active {
+  background-color: blue;
+  top: 0;
+  left: -50px;
+}
+
+.simonButton.yellow,
+.simonButton.yellow[disabled].active {
+  background-color: yellow;
+  top: 50px;
+  left: -50px;
+}
+
+.simonButton.green,
+.simonButton.green[disabled].active {
+  background-color: green;
+  top: 50px;
+  left: -100px;
+}
+
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }

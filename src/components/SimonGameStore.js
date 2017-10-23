@@ -5,7 +5,7 @@ export default function SimonGameStore() {
     
     //observables
     extendObservable(this, {
-        currentSequence: ['red', 'red', 'yellow', 'blue'], //current sequence game is looking for
+        currentSequence: [], //current sequence game is looking for
         enteredSequence: [], //current sequence player has entered
         currentPosition: 0, //integer value of the step the user is currenty at
         outputMode: false, //game is giving user info on what to enter
@@ -25,6 +25,9 @@ export default function SimonGameStore() {
     this.updateSequence = action('updateSequence', () => {
         let newColor = _.sample(this.colors);
         this.currentSequence.push(newColor);
+        this.enteredSequence.length = 0;
+        this.currentPosition = 0;
+        this.toggleTurn();
     });
 
     /* 
@@ -34,11 +37,19 @@ export default function SimonGameStore() {
     */
     this.inputColor = action('inputColor', (color) => {
         this.enteredSequence.push(color);
+        
         if ( !this.compareSequences(this.currentPosition) ) {
             this.lastInputCorrect = false;
+            this.currentSequence.length = 0;
+            this.inputMode = false;
+            this.outputMode = false;
             this.gameRunning = false;
+        } else {
+            this.lastInputCorrect = true;
         }
+
         this.currentPosition++;
+
     });
 
     /*
@@ -63,11 +74,20 @@ export default function SimonGameStore() {
 
     /* 
     @function toggleTurn
-    @description toggles game state between input and output mode
+    @description toggles game state between off, input, and output mode,
+    clearing user input when switching from output to input.
     */
     this.toggleTurn = action('toggleTurn', () => {
-        this.inputMode = !this.inputMode;
-        this.outputMode = !this.outputMode;
+        if (this.outputMode) {
+            this.enteredSequence.length = 0;
+        }
+        if (!this.inputMode && !this.outputMode) {
+            this.outputMode = true;
+            this.gameRunning = true;
+        } else {
+            this.inputMode = !this.inputMode;
+            this.outputMode = !this.outputMode;
+        }
     });
 
     /* 

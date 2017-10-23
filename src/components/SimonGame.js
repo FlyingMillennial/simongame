@@ -9,7 +9,6 @@ class SimonGame extends React.Component {
 
         return (
             <div>
-                <StartButton onClick={store.startGame} />
                 <Board />
                 <hr />
                 <StateMonitor 
@@ -23,12 +22,6 @@ class SimonGame extends React.Component {
             </div>
         );
     }
-}
-
-const StartButton = (props) => {
-    return (
-        <button onClick={props.onClick}>Start Game</button>
-    );
 }
 
 const StateMonitor = (props) => {

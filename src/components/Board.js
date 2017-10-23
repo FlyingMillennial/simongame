@@ -13,17 +13,22 @@ class Board extends React.Component {
             store.currentSequence.forEach( (color, i) => {
                 let timoutTime = (i+1) * 1000;
                 setTimeout( () => {
-                    console.log(color);
+                    store.buttonLit = color;
+                    if (i === store.currentSequence.length - 1) {
+                        setTimeout( () => {
+                            store.toggleTurn();
+                        });
+                    }
                 }, timoutTime);
             });
         }
 
         return (
-            <div>
+            <div className="buttonContainer">
                 {store.colors.map( (color, i) =>
                     <SimonButton key={i} color={color} />
                 )}
-                <button onClick={displayNewSequence}>Update Sequence</button>
+                <button onClick={displayNewSequence}>{store.gameRunning ? "Finish Turn" : "Start Game"}</button>
             </div>
         )
     }

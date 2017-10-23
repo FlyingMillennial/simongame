@@ -8,8 +8,18 @@ class SimonButton extends React.Component {
     }
     
     render() {
+
+        let store = this.props.simonGameStore;
+        let buttonLit = store.buttonLit === this.props.color;
+        let classString = "simonButton " + this.props.color;
+        classString += buttonLit ? " active" : "";
+
         return (
-            <button key={this.props.key} onClick={this.handleClick}>
+            <button 
+                key={this.props.key} 
+                onClick={this.handleClick} 
+                disabled={!store.inputMode} 
+                className={classString}> 
                 {this.props.color}
             </button>
         )
