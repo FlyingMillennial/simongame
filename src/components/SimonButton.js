@@ -20,7 +20,7 @@ class SimonButton extends React.Component {
                 onClick={this.handleClick} 
                 disabled={!store.inputMode} 
                 className={classString}> 
-                {this.props.color}
+                
             </button>
         )
     }

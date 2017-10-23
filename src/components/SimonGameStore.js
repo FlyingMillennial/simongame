@@ -12,8 +12,6 @@ export default function SimonGameStore() {
         inputMode: false, //user is pushing buttons
         gameRunning: false, //game is running
         buttonLit: '', //which color button is currently lit up
-        timeRemaining: null, //how much time user has to push a button
-        timeIntervalID: null, //save interval ID for running clock
         lastInputCorrect: true, //Was the last user input correct?
         colors: ['red', 'yellow', 'blue', 'green'] //the colors, duke, the colors!
     });
@@ -37,19 +35,19 @@ export default function SimonGameStore() {
     */
     this.inputColor = action('inputColor', (color) => {
         this.enteredSequence.push(color);
-        if ( !this.compareSequences(this.currentPosition) ) {
+        if ( !this.compareColors(this.currentPosition) ) {
             this.stopGame();
         }
         this.currentPosition++;
     });
 
     /*
-    @function compareSequences
+    @function compareColors
     @description check to see that the entered sequence 
     matches the current sequence.
     @param:position current position within the arrays to compare
     */
-    this.compareSequences = action('compareSequences', (position) => {
+    this.compareColors = action('compareSequences', (position) => {
         return this.currentSequence[position] === this.enteredSequence[position]; 
     });
 
@@ -72,21 +70,26 @@ export default function SimonGameStore() {
     */
     this.displaySequence = action( () => {
         this.currentSequence.forEach( (color, i) => {
-            let timoutTime = (i+1) * 1500;
+            let timeoutTime = (i+1) * 1500;
+
             //Light up the button
             setTimeout( () => {
                 this.buttonLit = color;
-            }, timoutTime);
+            }, timeoutTime);
+
             //No light for a moment
             setTimeout( () => {
                 this.buttonLit = null;
-            }, timoutTime - 500);
-            //Toggle back to input mode one second after the final color is displayed
+            }, timeoutTime - 500);
+
+            //Toggle back to input mode after the final color is displayed
             if (i === this.currentSequence.length - 1) {
-                setTimeout( () => {
+                setTimeout ( () => {
                     this.buttonLit = null;
+                }, timeoutTime + 1500);
+                setTimeout( () => {
                     this.toggleTurn();
-                }, timoutTime + 1500);
+                }, timeoutTime + 2000);
             }
         });
     });
@@ -147,6 +150,5 @@ export default function SimonGameStore() {
             this.timeRemaining = this.timeRemaining - 1;
         }, 1000);
     });
-
 
 }

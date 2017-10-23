@@ -20,7 +20,8 @@ class Board extends React.Component {
                 )}
                 <button 
                     onClick={store.checkGameRunning ? finishInput : store.startGame}
-                    disabled={store.outputMode}>
+                    disabled={store.outputMode}
+                    className="mainButton">
                     {store.gameRunning ? "Finish Turn" : "Start Game"}
                 </button>
             </div>
